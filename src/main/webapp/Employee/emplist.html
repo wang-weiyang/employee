@@ -1,0 +1,134 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <title>emplist</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link rel="stylesheet" type="text/css" href="http://localhost:8080/employee/Employee/css/style.css"/>
+    <script src="http://localhost:8080/employee/Employee/js/jquery-3.5.1.min.js"></script>
+    <script>
+        $(function () {
+
+            // var obj = $("tr");
+            // obj.click(function(){
+            //  obj.children().removeAttr("style");
+            //$(this).children().attr("style","background-color:red");
+            //});
+            var taObj = $("table tr");
+            taObj.each(function (index) {
+                $(this).click(function () {
+                    $(this).children().attr("style", "background-color:red");
+                    $(this).siblings().children().removeAttr("style");
+                });
+            });
+
+        });
+
+
+    </script>
+</head>
+<body>
+<div id="wrap">
+    <div id="top_content">
+        <div id="header">
+            <div id="rightheader">
+                <p>
+                    2009/11/20
+                    <br/>
+                </p>
+            </div>
+            <div id="topheader">
+                <h1 id="title">
+                    <a href="#">main</a>
+                </h1>
+            </div>
+            <div id="navigation">
+            </div>
+        </div>
+        <div id="content">
+            <p id="whereami">
+            </p>
+            <h1>
+                Welcome!
+            </h1>
+            <table class="table" id="tab">
+                <script type="text/javascript">
+                    $(function () {
+                        let tab = $("#tab")
+                        $.ajax({
+                            url: "http://localhost:8080/employee/select",
+                            type: "post",
+                            dataType: "json",
+                            success: (data) => {
+                                let th = `<tr class="table_header">
+                                    <td>
+                                        ID
+                                    </td>
+                                    <td>
+                                        Name
+                                    </td>
+                                    <td>
+                                        Salary
+                                    </td>
+                                    <td>
+                                        Age
+                                    </td>
+                                    <td>
+                                        Operation
+                                    </td>
+                                </tr>`
+                                tab.append(th);
+                                for (let i = 0; i < data.length - 1; i++) {
+                                    for (let j = 0; j < data.length - 1 - i; j++) {
+                                        if (parseInt(data[j].id) > parseInt(data[j + 1].id)) {
+                                            let tem = data[j]
+                                            data[j] = data[j + 1]
+                                            data[j + 1] = tem
+                                        }
+                                    }
+                                }
+                                for (let datum of data) {
+
+                                    let td = `<tr class="tr">
+										<td>
+											${datum.id}
+										</td>
+										<td>
+											${datum.name}
+										</td>
+										<td>
+											${datum.salary}
+										</td>
+										<td>
+											${datum.age}
+										</td>
+										<td>
+											<a href="http://localhost:8080/employee/del?n=${datum.id}">delete emp</a>&nbsp;
+											<a href="updateEmp.html?name=${datum.id}">update emp</a>
+										</td>
+									</tr>`
+                                    tab.append(td);
+                                }
+                                $(".tr:even").addClass("row1 tr")
+                                $(".tr:odd").addClass("row2 tr")
+                            },
+                            error: (data) => {
+                                console.log(data);
+                            }
+                        })
+                    })
+                </script>
+
+            </table>
+            <p>
+                <input type="button" class="button" value="Add Employee" onclick="location='addEmp.html'"/>
+            </p>
+        </div>
+    </div>
+    <div id="footer">
+        <div id="footer_bg">
+            ABC@126.com
+        </div>
+    </div>
+</div>
+</body>
+</html>
